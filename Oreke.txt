@@ -1,1 +1,114 @@
-erfet
+CREATE TABLE applications
+(
+    app_id NUMBER(4)
+        CONSTRAINT app_id_nn NOT NULL
+    , app_name VARCHAR2(50)
+        CONSTRAINT app_name_nn NOT NULL
+    , dev_name VARCHAR2(45)
+        CONSTRAINT developer_name_nn NOT NULL
+    , app_size NUMBER
+        CONSTRAINT app_size_nn NOT NULL
+    , rating NUMBER(1,1)
+        CONSTRAINT rating_nn NOT NULL
+    , kategory VARCHAR2(25)
+    , price NUMBER
+    , last_update DATE
+        CONSTRAINT last_update_nn NOT NULL
+);
+
+ALTER TABLE applications ADD applications_pk PRIMARY KEY(app_id);
+
+CREATE TABLE developers 
+(
+    dev_id NUMBER
+        CONSTRAINT dev_id_nn NOT NULL
+    , dev_name VARCHAR2(45)
+        CONSTRAINT dev_name_nn NOT NULL
+    , email VARCHAR2(50)
+        CONSTRAINT email_nn NOT NULL
+    , created_apps NUMBER(3)
+        CONSTRAINT created_apps_nn NOT NULL
+    , payment VARCHAR2(15)
+        CONSTRAINT payment_nn NOT NULL
+    , field VARCHAR2(25)
+);
+
+ALTER TABLE developers ADD developers_pk PRIMARY KEY(dev_id);
+
+ALTER TABLE applications ADD CONSTRAINT app_dev_fk
+    FOREIGN KEY (dev_name) REFERENCES developers(dev_name);
+
+
+CREATE TABLE users 
+(
+    user_id NUMBER
+        CONSTRAINT user_id_nn NOT NULL
+    , user_name VARCHAR2(50)
+        CONSTRAINT user_name_nn NOT NULL
+    , email VARCHAR2(50)
+        CONSTRAINT email_nn NOT NULL
+    , installed_apps NUMBER(3)
+        CONSTRAINT installed_apps_nn NOT NULL
+);
+
+ALTER TABLE users ADD users_pk PRIMARY KEY(user_id);
+
+ALTER TABLE users ADD CONSTRAINT user_dev_fk
+    FOREIGN KEY (email) REFERENCES developers(email);
+
+CREATE TABLE subscription
+(
+    app_id NUMBER
+        CONSTRAINT app_id_nn NOT NULL
+    , app_name VARCHAR2(50)
+        CONSTRAINT app_name_nn NOT NULL
+    , dev_name VARCHAR2(45)
+        CONSTRAINT developer_name_nn NOT NULL
+    , price NUMBER
+        CONSTRAINT price_nn NOT NULL
+    , subs_users NUMBER
+);
+
+ALTER TABLE subscription ADD subscription_pk PRIMARY KEY(app_id);
+
+ALTER TABLE applications ADD CONSTRAINT app_subs_fk
+    FOREIGN KEY (app_id) REFERENCES subscription(app_id);
+
+ALTER TABLE applications ADD CONSTRAINT app_subs_fk
+    FOREIGN KEY (app_name) REFERENCES subscription(app_name);
+
+ALTER TABLE subscription ADD CONSTRAINT subs_dev_fk
+    FOREIGN KEY (dev_name) REFERENCES developers(dev_name);
+
+
+
+INSERT INTO applications(app_id, app_name, dev_name, app_size, rating, kategory, price, last_update) 
+    VALUES(1, 'CryptoTab Browser', 'CryptoCompany OU', 40.6, 4.3, 'browser', 890, '08.04.20');
+INSERT INTO applications(app_id, app_name, dev_name, app_size, rating, last_update) 
+    VALUES(2, 'Moodle', 'Moodle Pty Ltd', 15, 2.7, '02.04.20');
+INSERT INTO applications(app_id, app_name, dev_name, app_size, rating, kategory, last_update) 
+    VALUES(3, 'WhatsApp', 'WhatsApp Inc', 22, 4.3, 'messenger', '13.04.20');
+INSERT INTO applications(app_id, app_name, dev_name, app_size, rating, price, last_update) 
+    VALUES(4, 'GO Keyboard', 'Best Video Editor Dev', 32, 4.5, 450, '19.01.20');
+
+
+
+INSERT INTO developers(dev_id, dev_name, email, created_apps, payment) 
+    VALUES(1, 'Google LLC', 'google-oficcial@gmail.com', 97, 'MasterCard');
+INSERT INTO developers(dev_id, dev_name, email, created_apps, payment) 
+    VALUES(2, 'WhatsApp Inc', 'WhatsWhatsApp@gmail.com', 3, 'VISA');
+
+
+/* в таблице user все значения обязательны 
+поэтому можно не указывать что именно мы вводим. Я здесь просто чтобы не запутаться
+values в скобки записала
+                        (user_id, user_name, email, installed_apps)*/
+INSERT INTO users VALUES(100, 'Akmaral Adilzhan', 'oniisamaai@gmail.com', 108);
+
+
+
+
+INSERT INTO subscription(app_id, app_name, dev_name, price, subs_users) 
+    VALUES(1, 'CryptoTab Browser', 'CryptoCompany OU', 890, 108745);
+INSERT INTO subscription(app_id, app_name, dev_name, price) 
+    VALUES(2, 'GO Keyboard', 'Best Video Editor Dev', 450);
